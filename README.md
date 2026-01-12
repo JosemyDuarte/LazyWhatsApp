@@ -1,6 +1,10 @@
-# WhatsAI - WhatsApp Chat Insights
+# LazyWhatsApp - WhatsApp Chat Insights
 
-WhatsAI is a privacy-first, browser-based WhatsApp chat analyzer. It provides quantitative statistics and qualitative AI-driven insights without ever sending your chat data to a server.
+LazyWhatsApp is a privacy-first, browser-based WhatsApp chat analyzer. It provides quantitative statistics and qualitative AI-driven insights without ever sending your chat data to a server. This was vibe-coded over a weekend, don't expect any level of "production readiness" quality. I build this because I didn't want to read more 500 messages I got on an old group chat 🫣
+
+![SCR-20260112-sifn](https://github.com/user-attachments/assets/f186a405-f016-41c0-a1dd-2125a6008995)
+![SCR-20260112-siib](https://github.com/user-attachments/assets/082e707d-0c3e-4f84-a41c-a7408addcb06)
+![SCR-20260112-snyt](https://github.com/user-attachments/assets/4e921ebf-29f1-40b1-99cf-da91495df0e7)
 
 ## 🚀 Quick Start (Local)
 
@@ -16,14 +20,6 @@ WhatsAI is a privacy-first, browser-based WhatsApp chat analyzer. It provides qu
 
 3. **LLM Support (Optional)**:
    Install [Ollama](https://ollama.ai), run `ollama pull llama3`, and ensure the model matches your preference in `src/config.ts`.
-
-## 🐳 Docker Deployment
-
-Run the entire stack (App + Ollama) using Docker Compose:
-
-```bash
-docker-compose up -d
-```
 
 Access the app at `http://localhost:4321`.
 
