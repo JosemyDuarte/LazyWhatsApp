@@ -1,0 +1,113 @@
+---
+interface Props {
+  minDate?: string;
+  maxDate?: string;
+  id?: string;
+}
+
+const { minDate, maxDate, id = "date-range-selector" } = Astro.props;
+---
+
+<date-range-selector id={id} class="flex flex-col gap-4 mb-8 p-6 bg-card border border-card-border rounded-lg hidden">
+  <div class="flex justify-between items-center">
+    <label class="text-[0.75rem] font-bold text-text-muted tracking-widest uppercase">Date Range Filter</label>
+    <div id="message-count-badge" class="text-[0.75rem] px-2.5 py-1 rounded-full bg-primary/10 text-primary font-semibold hidden">0 messages</div>
+  </div>
+  
+  <div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="start-date" class="text-[0.85rem] text-text-muted">From</label>
+      <input type="date" id="start-date" min={minDate} max={maxDate} value={minDate} class="w-full bg-white/[0.03] border border-card-border rounded-md px-4 py-3 text-text font-sans text-[0.95rem] transition-all duration-200 cursor-pointer hover:border-white/15 hover:bg-white/5 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 [&::-webkit-calendar-picker-indicator]:invert-[1] [&::-webkit-calendar-picker-indicator]:opacity-60 hover:[&::-webkit-calendar-picker-indicator]:opacity-100" />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="end-date" class="text-[0.85rem] text-text-muted">To</label>
+      <input type="date" id="end-date" min={minDate} max={maxDate} value={maxDate} class="w-full bg-white/[0.03] border border-card-border rounded-md px-4 py-3 text-text font-sans text-[0.95rem] transition-all duration-200 cursor-pointer hover:border-white/15 hover:bg-white/5 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 [&::-webkit-calendar-picker-indicator]:invert-[1] [&::-webkit-calendar-picker-indicator]:opacity-60 hover:[&::-webkit-calendar-picker-indicator]:opacity-100" />
+    </div>
+  </div>
+  
+  <div id="range-error" class="text-error text-[0.85rem] font-medium flex items-center gap-2 hidden">
+    <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-error/10 text-error text-[0.7rem] font-extrabold">!</span>
+    Start date must be before end date
+  </div>
+</date-range-selector>
+
+<script>
+  class DateRangeSelector extends HTMLElement {
+    private startInput: HTMLInputElement | null = null;
+    private endInput: HTMLInputElement | null = null;
+    private errorText: HTMLDivElement | null = null;
+    private badge: HTMLDivElement | null = null;
+
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      this.startInput = this.querySelector('#start-date');
+      this.endInput = this.querySelector('#end-date');
+      this.errorText = this.querySelector('#range-error');
+      this.badge = this.querySelector('#message-count-badge');
+
+      this.startInput?.addEventListener('change', () => this.validateAndDispatch());
+      this.endInput?.addEventListener('change', () => this.validateAndDispatch());
+    }
+
+    public updateBounds(min: string, max: string) {
+      if (this.startInput && this.endInput) {
+        this.startInput.min = min;
+        this.startInput.max = max;
+        if (!this.startInput.value) this.startInput.value = min;
+        if (!this.endInput.value) this.endInput.value = max;
+        
+        this.classList.remove('hidden');
+        this.validateAndDispatch(false);
+      }
+    }
+
+    public updateCount(count: number) {
+      if (this.badge) {
+        this.badge.textContent = `${new Intl.NumberFormat().format(count)} messages`;
+        this.badge.classList.remove('hidden');
+      }
+    }
+
+    private validateAndDispatch(dispatch = true) {
+      if (!this.startInput || !this.endInput) return;
+      
+      const startStr = this.startInput.value;
+      const endStr = this.endInput.value;
+      
+      if (!startStr || !endStr) return;
+
+      const start = new Date(startStr).getTime();
+      const endDate = new Date(endStr);
+      endDate.setHours(23, 59, 59, 999);
+      const end = endDate.getTime();
+
+      const isValid = start <= end;
+
+      if (!isValid) {
+        this.errorText?.classList.remove('hidden');
+        this.startInput.classList.add('border-error');
+        this.endInput.classList.add('border-error');
+      } else {
+        this.errorText?.classList.add('hidden');
+        this.startInput.classList.remove('border-error');
+        this.endInput.classList.remove('border-error');
+      }
+
+      if (dispatch) {
+        this.dispatchEvent(new CustomEvent('range-changed', {
+          detail: {
+            start,
+            end,
+            isValid
+          },
+          bubbles: true
+        }));
+      }
+    }
+  }
+
+  customElements.define('date-range-selector', DateRangeSelector);
+</script>

@@ -1,0 +1,27 @@
+---
+const { peaks } = Astro.props;
+---
+
+<div class="mt-12">
+  <h3 class="text-xl font-black mb-1">🔥 Controversy Report</h3>
+  <p class="text-text-muted mb-8">Detected high-density message peaks and their topics</p>
+
+  <div class="flex flex-col gap-6">
+    {peaks.map((peak: any, index: number) => (
+      <div class="p-6 rounded-lg bg-card border border-card-border shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex flex-col gap-4 backdrop-blur-md">
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-accent">Peak #{index + 1}</span>
+          <span class="text-[0.85rem] bg-indigo-400/10 text-accent px-3 py-1 rounded-full">{peak.messageCount} messages in 10 mins</span>
+        </div>
+        <div>
+          <p class="italic leading-relaxed" id={`summary-${index}`}>
+            {peak.summary || 'Analyzing topics...'}
+          </p>
+        </div>
+        <div class="text-[0.8rem] text-text-muted border-t border-white/5 pt-3">
+          <span>{new Date(peak.startTime).toLocaleTimeString()} - {new Date(peak.endTime).toLocaleTimeString()}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

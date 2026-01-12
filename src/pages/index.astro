@@ -1,0 +1,407 @@
+---
+import '../styles/global.css';
+import FileUpload from '@features/upload/components/FileUpload.astro';
+import StrategySelector from '@features/upload/components/StrategySelector.astro';
+import DateRangeSelector from '@features/upload/components/DateRangeSelector.astro';
+import { ChatSidebar } from '@features/chat/components/ChatSidebar';
+import { DashboardContainer } from '@features/dashboard/components/DashboardContainer';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>WhatsAI - WhatsApp Insights</title>
+	</head>
+	<body class="bg-bg text-text selection:bg-primary/30">
+        <nav class="top-nav fixed top-0 left-0 right-0 h-16 border-b border-card-border bg-bg/80 backdrop-blur-md z-[1000] flex animate-fade-in translate-y-0 opacity-100 [&:not(.visible)]:hidden">
+            <div class="max-w-[1200px] mx-auto w-full flex justify-between items-center px-6">
+                <div class="flex items-center gap-3">
+                    <div class="text-primary flex items-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    </div>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-[1.1rem] font-black text-text">WhatsAI</span>
+                        <span class="text-[0.65rem] font-semibold text-text-muted tracking-widest mt-0.5 uppercase">Chat Processor</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    {/* Theme and Account icons removed */}
+                </div>
+            </div>
+        </nav>
+
+		<main class="max-w-[1200px] mx-auto px-6 py-16 pt-32 min-h-screen flex flex-col items-center">
+            <section class="w-full max-w-[800px]">
+                <div id="upload-step">
+                    <header class="text-center mb-12 animate-fade-in">
+                        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tight bg-gradient-to-br from-white to-indigo-300 bg-clip-text text-transparent">Upload Chat History</h1>
+                        <p class="text-text-muted text-lg max-w-[600px] mx-auto">Export your WhatsApp chat as a .txt file (without media) and drop it here for a comprehensive AI-driven analysis.</p>
+                    </header>
+                    <FileUpload />
+                    
+                    <div class="my-8">
+                        <button class="w-full bg-card border border-card-border rounded-md p-5 flex justify-between items-center text-text font-semibold cursor-pointer transition-all hover:bg-white/5" id="how-to-btn">
+                            <div class="flex items-center gap-3 text-primary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                                <span class="text-text">How to export your chat</span>
+                            </div>
+                            <svg class="chevron text-text-muted transition-transform duration-300" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="p-8 bg-card border border-card-border rounded-lg shadow-sm">
+                        <div class="flex items-center gap-3 text-primary mb-8 text-left">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.72V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.17a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <h3 class="text-text font-bold text-xl">Analysis Configuration</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                            <DateRangeSelector id="main-range-selector" />
+                            <StrategySelector />
+                        </div>
+                        
+                        <div id="analysis-actions" class="hidden border-t border-card-border pt-10 flex flex-col items-center gap-4">
+                            <button id="start-analysis-btn" class="bg-primary text-white py-4 px-8 rounded-md font-bold text-lg cursor-pointer transition-all duration-200 ease-bounce flex items-center justify-center gap-3 w-full shadow-[0_8px_24px_-6px_var(--color-primary)] hover:bg-primary-hover hover:-translate-y-0.5">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 16V8"/><path d="M11 16V12"/><path d="M15 16v-4"/></svg>
+                                <span>Start Deep Analysis</span>
+                            </button>
+                            <p class="text-[0.7rem] font-bold text-text-muted tracking-widest uppercase">Estimated processing time: ~45 seconds for 5,000+ messages</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="processing-step" style="display: none;">
+                    <div class="bg-card/40 backdrop-blur-xl border border-card-border rounded-lg p-10 flex flex-col items-center text-center gap-6 shadow-2xl">
+                        <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                        <h3 class="text-xl font-bold">Analyzing Chat...</h3>
+                        <p id="progress-text" class="text-text-muted">Preparing parser...</p>
+                        <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                            <div id="progress-fill" class="h-full bg-primary transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="results-container" class="hidden grid-cols-1 xl:grid-cols-[1fr_500px] gap-12 w-full max-w-[1600px] mt-12 pb-20 [&:not(.hidden)]:grid">
+                <div class="stats-column flex flex-col gap-12 flex-1">
+                    <DashboardContainer client:only="react" />
+                    <div id="controversy-report" class="flex flex-col gap-6"></div>
+                </div>
+                <div class="chat-column xl:sticky xl:top-24 h-[600px] xl:h-[calc(100vh-12rem)] max-h-[900px]">
+                    <ChatSidebar client:idle />
+                </div>
+            </div>
+            
+            <footer class="mt-24 pb-8 text-center border-t border-card-border pt-8 w-full">
+                <p class="text-[0.75rem] text-text-muted font-medium">© 2026 WhatsAI. Secure, private, and powered by advanced RAG technology.</p>
+            </footer>
+		</main>
+
+        <script>
+            import type { AnalysisConfiguration } from '@features/chat/types';
+
+            let currentFile: File | null = null;
+            let currentStrategy = 'hybrid';
+            let worker: Worker | null = null;
+            let currentConfig: AnalysisConfiguration = {
+                strategy: 'hybrid'
+            };
+
+            const uploadStep = document.getElementById('upload-step');
+            const processingStep = document.getElementById('processing-step');
+            const resultsContainer = document.getElementById('results-container');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const resetBtnNav = document.getElementById('reset-btn-nav');
+            const howToBtn = document.getElementById('how-to-btn');
+            const rangeSelector = document.getElementById('main-range-selector') as any;
+            const strategySelect = document.getElementById('strategy-select') as HTMLSelectElement;
+            const analysisActions = document.getElementById('analysis-actions');
+            const startBtn = document.getElementById('start-analysis-btn') as HTMLButtonElement;
+
+            howToBtn?.addEventListener('click', () => {
+                const chevron = howToBtn.querySelector('.chevron') as HTMLElement;
+                const isExpanded = chevron.style.transform === 'rotate(180deg)';
+                chevron.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
+                // In a real app we would toggle a content div here, for the redesign we just show the toggle
+            });
+
+            strategySelect?.addEventListener('change', () => {
+                currentStrategy = strategySelect.value;
+                currentConfig.strategy = currentStrategy as any;
+                window.dispatchEvent(new CustomEvent('strategy-changed', { detail: currentStrategy }));
+            });
+
+            window.addEventListener('file-selected', async (e: any) => {
+                currentFile = e.detail;
+                await parseFileOnly();
+            });
+
+            window.addEventListener('range-changed', (e: any) => {
+                const { start, end, isValid } = e.detail;
+                currentConfig.dateRange = { start, end };
+                
+                const rangeText = document.getElementById('range-text');
+                if (rangeText) {
+                    const startStr = new Date(start).toLocaleDateString();
+                    const endStr = new Date(end).toLocaleDateString();
+                    rangeText.textContent = `${startStr} - ${endStr}`;
+                    rangeText.style.color = 'var(--color-text)';
+                }
+
+                if (startBtn) {
+                    startBtn.disabled = !isValid;
+                    startBtn.style.opacity = isValid ? '1' : '0.5';
+                }
+
+                if (isValid && worker) {
+                    worker.postMessage({ type: 'FILTER_RANGE', payload: currentConfig });
+                }
+            });
+
+            startBtn?.addEventListener('click', () => {
+                startAnalysis();
+            });
+
+            resetBtnNav?.addEventListener('click', () => {
+                resultsContainer!.classList.add('hidden');
+                uploadStep!.style.display = 'block';
+                document.querySelector('.top-nav')?.classList.remove('visible');
+                analysisActions?.classList.add('hidden');
+                currentFile = null;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            async function parseFileOnly() {
+                if (!currentFile) return;
+                const text = await currentFile.text();
+                if (!worker) {
+                    const WorkerModule = await import('@core/worker/parser.worker.ts?worker');
+                    worker = new WorkerModule.default();
+                }
+
+                worker!.onmessage = (e) => {
+                    const { type, payload } = e.data;
+                    if (type === 'COMPLETE') {
+                        const messages = payload.messages;
+                        if (messages.length > 0) {
+                            const minTs = messages[0].timestamp;
+                            const maxTs = messages[messages.length - 1].timestamp;
+                            const minDate = new Date(minTs).toISOString().split('T')[0];
+                            const maxDate = new Date(maxTs).toISOString().split('T')[0];
+                            rangeSelector?.updateBounds(minDate, maxDate);
+                            rangeSelector?.updateCount(messages.length);
+                            analysisActions?.classList.remove('hidden');
+                        } else {
+                            alert('No valid WhatsApp messages found. Please check the file format.');
+                            uploadStep!.style.display = 'block';
+                            processingStep!.style.display = 'none';
+                        }
+                    } else if (type === 'RANGE_UPDATED') {
+                        rangeSelector?.updateCount(payload.messageCount);
+                    }
+                };
+                worker!.postMessage({ type: 'PARSE_FILE', payload: text });
+            }
+
+            async function startAnalysis() {
+                if (!currentFile) return;
+                uploadStep!.style.display = 'none';
+                processingStep!.style.display = 'block';
+
+                worker!.onmessage = (e) => {
+                    const { type, payload } = e.data;
+                    if (type === 'RANGE_UPDATED') {
+                        showResults(payload);
+                    } else if (type === 'PROGRESS') {
+                        updateProgress(payload, getProgressText(payload));
+                    }
+                };
+                worker!.postMessage({ type: 'FILTER_RANGE', payload: currentConfig });
+            }
+
+            function getProgressText(value: number) {
+                if (value < 40) return 'Parsing chat lines...';
+                if (value < 70) return 'Calculating statistics...';
+                if (value < 90) return 'Detecting engagement patterns...';
+                return 'Finalizing report...';
+            }
+
+            function updateProgress(value: number, text: string) {
+                if (progressFill) progressFill.style.width = `${value}%`;
+                if (progressText) progressText.textContent = text;
+            }
+
+            function renderControversy(peaks: any[]) {
+                const container = document.getElementById('controversy-report');
+                if (!container) return;
+
+                if (peaks.length === 0) {
+                    container.innerHTML = '<p class="bg-card border border-card-border rounded-lg p-10 text-center animate-fade-in">No significant controversy peaks detected.</p>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="flex flex-col gap-8 animate-fade-in mt-12">
+                        <div class="flex items-center gap-5">
+                            <span class="text-[1.8rem] filter drop-shadow-[0_0_8px_rgba(239, 68, 68, 0.3)]">🔥</span>
+                            <div>
+                                <h3 class="text-xl font-black bg-gradient-to-br from-white to-indigo-300 bg-clip-text text-transparent">Controversy Peaks</h3>
+                                <p class="text-[0.9rem] text-text-muted mt-1">Detected high-density message clusters</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-6">
+                            ${peaks.map((peak, index) => `
+                                <div class="p-6 rounded-lg bg-card border border-card-border shadow-[0_4px_24px_rgba(0,0,0,0.2)] transition-all duration-200 ease-bounce hover:-translate-y-1 hover:border-primary/30 backdrop-blur-md">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <div class="flex items-center gap-4">
+                                            <span class="font-black text-[1.1rem] text-white">Peak #${index + 1}</span>
+                                            <span class="text-[0.85rem] text-text-muted bg-white/5 px-2.5 py-1 rounded-md transition-colors">${peak.messageCount} messages</span>
+                                        </div>
+                                        <span class="font-mono text-[0.85rem] text-accent p-2 rounded-lg bg-white/5 border border-white/5 font-semibold backdrop-blur-md">
+                                            ${new Date(peak.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} — 
+                                            ${new Date(peak.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col gap-4">
+                                        <div class="italic leading-relaxed text-white/90 prose prose-invert max-w-none text-left" id="summary-${index}" style="display: none;"></div>
+                                        <button class="bg-white/5 border border-white/10 text-white w-full p-4 rounded-[14px] font-semibold cursor-pointer transition-all duration-200 hover:bg-white/10 hover:border-primary hover:text-primary text-[0.95rem]" onclick="window.analyzePeak(event, ${index}, ${JSON.stringify(peak).replace(/"/g, '&quot;')})">
+                                            ✨ Analyze qualitative insights
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            import { chatMessagesStore, insightsStore, isAnalyzingStore } from '@/store';
+
+            function showResults(data: any) {
+                processingStep!.style.display = 'none';
+                resultsContainer!.classList.remove('hidden');
+                document.querySelector('.top-nav')?.classList.add('visible');
+
+                // Update stores
+                insightsStore.set(data.insights);
+                chatMessagesStore.set(data.messages);
+                isAnalyzingStore.set(false);
+                
+                renderControversy(data.insights.peaks);
+                analyzeGlobalInsights();
+            }
+
+            async function analyzeGlobalInsights() {
+                const statsColumn = document.querySelector('.stats-column');
+                if (!statsColumn) return;
+
+                let reportDiv = document.getElementById('global-insight-report');
+                if (!reportDiv) {
+                    reportDiv = document.createElement('div');
+                    reportDiv.id = 'global-insight-report';
+                    reportDiv.className = 'p-8 rounded-lg bg-card border border-card-border shadow-sm animate-fade-in text-left';
+                    reportDiv.innerHTML = `
+                         <div class="flex items-center gap-4 mb-8">
+                            <span class="text-2xl">✨</span>
+                            <h3 class="text-2xl font-bold m-0 text-white">Global Qualitative Insights</h3>
+                        </div>
+                        <div id="global-analysis-progress" class="flex flex-col gap-4">
+                            <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                                <div id="global-progress-fill" class="h-full bg-primary transition-all duration-300 w-0"></div>
+                            </div>
+                            <span id="global-progress-text" class="text-sm text-text-muted font-medium">Brewing global insights...</span>
+                        </div>
+                        <div id="global-summary-content" class="text-left prose prose-invert max-w-none hidden"></div>
+                    `;
+                    statsColumn.insertBefore(reportDiv, document.getElementById('controversy-report'));
+                }
+
+                try {
+                    const { config } = await import('../config');
+                    const { OllamaAdapter } = await import('@core/ai/providers/ollama');
+                    const { AIOrchestrator } = await import('@core/ai/orchestrator');
+                    const { marked } = await import('marked');
+
+                    const adapter = new OllamaAdapter(config.ai.ollama.baseUrl, config.ai.ollama.model);
+                    const orchestrator = new AIOrchestrator(adapter);
+                    
+                    const summaryEl = document.getElementById('global-summary-content');
+                    const progressFill = document.getElementById('global-progress-fill');
+                    const progressText = document.getElementById('global-progress-text');
+                    const progressContainer = document.getElementById('global-analysis-progress');
+                    
+                    if (!summaryEl || !progressFill || !progressText || !progressContainer) return;
+
+                    worker!.postMessage({ type: 'GET_FILTERED_MESSAGES', payload: currentConfig });
+                    
+                    const onMessagesReceived = async (e: MessageEvent) => {
+                        const { type, payload } = e.data;
+                        if (type === 'MESSAGES_DATA') {
+                            worker!.removeEventListener('message', onMessagesReceived);
+                            
+                            let fullSummary = '';
+                            let isSynthesizing = false;
+
+                            for await (const chunk of orchestrator.streamAnalysis(payload, currentConfig)) {
+                                if (chunk.startsWith('[PROGRESS]:')) {
+                                    const parts = chunk.split(':');
+                                    progressFill.style.width = `${parts[1]}%`;
+                                    progressText.textContent = parts.slice(2).join(':');
+                                    continue;
+                                }
+
+                                if (!isSynthesizing) {
+                                    isSynthesizing = true;
+                                    progressContainer.classList.add('hidden');
+                                    summaryEl.classList.remove('hidden');
+                                }
+
+                                fullSummary += chunk;
+                                summaryEl.innerHTML = await marked.parse(fullSummary);
+                            }
+                        }
+                    };
+                    worker!.addEventListener('message', onMessagesReceived);
+                } catch (error) {
+                    console.error('Global analysis failed', error);
+                }
+            }
+
+            async function analyzePeak(e: Event, index: number, peak: any) {
+                const summaryEl = document.getElementById(`summary-${index}`);
+                const btn = e.currentTarget as HTMLButtonElement | null;
+                if (!summaryEl || !btn) return;
+
+                btn.style.display = 'none';
+                summaryEl.style.display = 'block';
+                summaryEl.innerHTML = '<div class="text-center py-8 text-text-muted italic animate-pulse">✨ Brewing qualitative insights...</div>';
+                
+                try {
+                    const { config } = await import('../config');
+                    const { OllamaAdapter } = await import('@core/ai/providers/ollama');
+                    const { AIOrchestrator } = await import('@core/ai/orchestrator');
+                    const { marked } = await import('marked');
+
+                    const adapter = new OllamaAdapter(config.ai.ollama.baseUrl, config.ai.ollama.model);
+                    const orchestrator = new AIOrchestrator(adapter);
+                    let fullSummary = '';
+                    
+                    for await (const chunk of orchestrator.streamSummary(peak)) {
+                        fullSummary += chunk;
+                        summaryEl.innerHTML = await marked.parse(fullSummary);
+                        summaryEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                } catch (error) {
+                    console.error('LLM summary failed', error);
+                    summaryEl.textContent = '⚠️ Error generating summary.';
+                    btn.style.display = 'block';
+                }
+            }
+            (window as any).analyzePeak = analyzePeak;
+        </script>
+	</body>
+</html>
+</html>

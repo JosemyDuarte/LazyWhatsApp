@@ -1,0 +1,79 @@
+---
+---
+
+<div class="py-16 px-8 text-center border border-dashed border-white/20 rounded-lg bg-white/[0.01] transition-all duration-200 cursor-pointer relative mb-8 hover:border-primary hover:bg-primary/5 [&.dragover]:border-primary [&.dragover]:bg-primary/5" id="drop-zone">
+  <div class="flex flex-col items-center gap-6">
+    <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+        <path d="M12 12v9" />
+        <path d="m16 16-4-4-4 4" />
+      </svg>
+    </div>
+    <div>
+        <h3 class="text-xl font-bold mb-2 text-text">Drag and drop your file</h3>
+        <p class="text-[0.9rem] text-text-muted">Supported format: .txt (WhatsApp export)</p>
+    </div>
+    <input type="file" id="file-input" accept=".txt" style="display: none;" />
+    <button class="bg-primary text-white px-8 py-3 rounded-md font-bold cursor-pointer transition-all duration-200 shadow-[0_4px_12px_-2px_rgba(59,130,246,0.4)] hover:bg-primary-hover hover:-translate-y-px" id="browse-btn">Select File</button>
+  </div>
+  <div id="file-info" class="absolute bottom-4 left-4 right-4 bg-bg-alt border border-card-border p-3 rounded-md flex justify-between items-center" style="display: none;">
+    <div class="flex items-center gap-2 text-text-muted text-[0.9rem] font-medium">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span class="filename"></span>
+    </div>
+    <button class="bg-transparent border-none text-error text-[0.8rem] font-bold cursor-pointer px-2 py-1" id="remove-btn">Remove</button>
+  </div>
+</div>
+
+<script>
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const browseBtn = document.getElementById('browse-btn');
+
+  browseBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput?.click();
+  });
+
+  dropZone?.addEventListener('click', () => {
+    fileInput?.click();
+  });
+
+  dropZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone?.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragover');
+  });
+
+  dropZone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const files = e.dataTransfer?.files;
+    if (files && files.length > 0) {
+      handleFile(files[0]);
+    }
+  });
+
+  fileInput?.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files.length > 0) {
+      handleFile(fileInput.files[0]);
+    }
+  });
+
+  function handleFile(file: File) {
+    if (file.type !== 'text/plain' && !file.name.endsWith('.txt')) {
+      alert('Please upload a .txt file');
+      return;
+    }
+    
+    // Dispatch custom event for parent components
+    const event = new CustomEvent('file-selected', { detail: file });
+    window.dispatchEvent(event);
+    
+    console.log('File selected:', file.name);
+  }
+</script>

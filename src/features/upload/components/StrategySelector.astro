@@ -1,0 +1,21 @@
+---
+---
+
+<div class="flex flex-col gap-3">
+  <label for="strategy-select" class="text-[0.7rem] font-bold text-text-muted tracking-widest uppercase">Processing Strategy</label>
+  <div class="relative flex items-center">
+    <select id="strategy-select" class="w-full bg-white/[0.03] border border-card-border text-text px-4 py-3 rounded-md text-[0.95rem] font-medium appearance-none cursor-pointer transition-all duration-200 hover:border-white/15 focus:outline-none focus:border-primary focus:bg-white/[0.05]">
+      <option value="hybrid" selected>Hybrid (Recommended)</option>
+      <option value="multi-pass">Multi-pass</option>
+      <option value="truncation">Truncation</option>
+    </select>
+    <svg class="absolute right-4 pointer-events-none text-text-muted transition-transform duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+  </div>
+</div>
+
+<script>
+  const strategySelect = document.getElementById('strategy-select') as HTMLSelectElement;
+  strategySelect?.addEventListener('change', () => {
+    window.dispatchEvent(new CustomEvent('strategy-changed', { detail: strategySelect.value }));
+  });
+</script>

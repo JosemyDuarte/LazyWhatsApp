@@ -1,0 +1,16 @@
+---
+interface Props {
+	progress: number; // 0 to 100
+	class?: string;
+	color?: string;
+}
+
+const { progress, class: className, color = 'var(--color-primary)' } = Astro.props;
+---
+
+<div class={`h-1 bg-white/5 rounded-full w-full overflow-hidden ${className || ''}`}>
+	<div 
+        class="h-full rounded-full transition-[width] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] opacity-80" 
+        style={`width: ${progress}%; background-color: ${color};`}
+    ></div>
+</div>

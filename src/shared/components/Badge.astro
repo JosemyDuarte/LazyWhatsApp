@@ -1,0 +1,21 @@
+---
+interface Props {
+	class?: string;
+	variant?: 'primary' | 'outline' | 'rank';
+}
+
+const { class: className, variant = 'primary' } = Astro.props;
+---
+
+const variants = {
+	primary: 'bg-primary text-white',
+	outline: 'bg-white/5 text-text-muted border border-white/10',
+	rank: 'w-7 h-7 rounded-full bg-white/5 text-text-muted p-0'
+};
+
+const baseClass = 'px-2.5 py-1 rounded-sm text-[0.75rem] font-bold uppercase tracking-wider inline-flex items-center justify-center';
+---
+
+<span class={`${baseClass} ${variants[variant]} ${className || ''}`}>
+	<slot />
+</span>

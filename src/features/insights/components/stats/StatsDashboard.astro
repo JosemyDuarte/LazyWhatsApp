@@ -1,0 +1,48 @@
+---
+const { stats, engagement } = Astro.props;
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 my-8">
+  <div class="p-8 flex flex-col items-center justify-center text-center bg-card border border-card-border rounded-lg shadow-sm">
+    <span class="text-[0.9rem] text-text-muted uppercase tracking-widest mb-2 font-bold">Total Messages</span>
+    <span class="text-[2.5rem] font-black text-primary leading-tight">{stats.totalMessages}</span>
+  </div>
+  
+  <div class="p-8 flex flex-col items-center justify-center text-center bg-card border border-card-border rounded-lg shadow-sm">
+    <span class="text-[0.9rem] text-text-muted uppercase tracking-widest mb-2 font-bold">Unique Senders</span>
+    <span class="text-[2.5rem] font-black text-primary leading-tight">{stats.uniqueSenders}</span>
+  </div>
+
+  <div class="p-8 flex flex-col items-center justify-center text-center bg-card border border-card-border rounded-lg shadow-sm">
+    <span class="text-[0.9rem] text-text-muted uppercase tracking-widest mb-2 font-bold">Top Speaker</span>
+    <span class="text-[2.5rem] font-black text-primary leading-tight truncate w-full">{stats.topSpeaker?.name || 'N/A'}</span>
+    <span class="text-[0.85rem] text-text-muted mt-2 font-medium">{stats.topSpeaker?.count} messages</span>
+  </div>
+
+  <div class="p-8 flex flex-col items-center justify-center text-center bg-card border border-card-border rounded-lg shadow-sm">
+    <span class="text-[0.9rem] text-text-muted uppercase tracking-widest mb-2 font-bold">Engagement Star</span>
+    <span class="text-[2.5rem] font-black text-primary leading-tight truncate w-full">{engagement.mostRepliedTo?.name || 'N/A'}</span>
+    <span class="text-[0.85rem] text-text-muted mt-2 font-medium">Most replied to</span>
+  </div>
+
+  <div class="p-8 flex flex-col items-center justify-center text-center bg-card border border-card-border rounded-lg shadow-sm sm:col-span-2 lg:col-span-2">
+    <span class="text-[0.9rem] text-text-muted uppercase tracking-widest mb-2 font-bold">Avg Response Time</span>
+    <span class="text-[2.5rem] font-black text-primary leading-tight">{Math.round(engagement.averageResponseTime)}s</span>
+    <span class="text-[0.85rem] text-text-muted mt-2 font-medium">Seconds between replies</span>
+  </div>
+
+  {stats.mostUsedEmojis?.length > 0 && (
+    <div class="p-8 flex flex-col items-center justify-center text-center bg-card border border-card-border rounded-lg shadow-sm sm:col-span-2 lg:col-span-2">
+      <span class="text-[0.9rem] text-text-muted uppercase tracking-widest mb-2 font-bold">Top Emojis</span>
+      <div class="flex gap-4 text-[2rem] my-2 flex-wrap justify-center">
+        {stats.mostUsedEmojis.slice(0, 5).map((e: { emoji: string; count: number }) => (
+          <span class="flex flex-col items-center gap-1 cursor-help transition-transform duration-200 hover:scale-110" title={`${e.count} uses`}>
+            {e.emoji}
+            <span class="text-[0.8rem] text-text-muted font-bold">{e.count}</span>
+          </span>
+        ))}
+      </div>
+      <span class="text-[0.85rem] text-text-muted mt-2 font-medium">Most frequent expressions</span>
+    </div>
+  )}
+</div>
